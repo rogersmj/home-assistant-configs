@@ -1,0 +1,16 @@
+
+matts_iphone:
+  hide_if_away: false
+  icon:
+  mac:
+  name: Matthew’s iPhone
+  picture:
+  track: true
+
+amandas_iphone:
+  hide_if_away: false
+  icon:
+  mac:
+  name: Amanda's iPhone
+  picture:
+  track: true

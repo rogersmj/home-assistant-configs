@@ -1,0 +1,19 @@
+sequence:
+# This part seems redundant, but we include because if this script is called
+# directly by Alexa (which can't "call" automations or input_selects), we want
+# to make sure the input mode reflects that
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.mode
+      option: 'Day'
+  - service: homeassistant.turn_off
+    entity_id:
+      - group.exterior_lights
+      - group.bedroom_lamps
+      - input_boolean.bedroom_motion_lights
+# But if we're not home, don't turn on any lights
+  - condition: state
+    entity_id: input_select.presence
+    state: 'Home'
+  - service: scene.turn_on
+    entity_id: scene.default_day

@@ -1,0 +1,10 @@
+secrets.yaml
+*.db
+*.log
+*.conf
+.cloud
+.storage
+.Trash*
+.HA_VERSION
+.ios.conf
+zones.yaml

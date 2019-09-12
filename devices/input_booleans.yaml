@@ -1,0 +1,18 @@
+vacation_mode:
+  name: Vacation mode
+  icon: mdi:airplane
+
+detect_motion:
+  name: Detect motion
+  icon: mdi:motion-sensor
+
+detect_motion_basement:
+  name: Detect motion in basement
+  icon: mdi:motion-sensor
+
+guests:
+  name: Guest mode
+  icon: mdi:account-badge
+
+bedroom_motion_lights:
+  name: Bedroom motion lights

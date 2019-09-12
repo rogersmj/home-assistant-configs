@@ -1,0 +1,27 @@
+push:
+  categories:
+    - name: Vacuum
+      identifier: 'vacuum'
+      actions:
+        - identifier: 'RUN_VACUUM'
+          title: 'Start cleaning'
+          activationMode: 'background'
+          authenticationRequired: no
+    - name: Prepare Away
+      identifier: 'prepareaway'
+      actions:
+        - identifier: 'CANCELGUESTS'
+          title: 'Cancel and enable guests'
+          activationMode: 'background'
+          authenticationRequired: no
+        - identifier: 'CANCEL'
+          title: 'Cancel'
+          activationMode: 'background'
+          authenticationRequired: no
+    - name: Disable Guests
+      identifier: 'disableguestmode'
+      actions:
+        - identifier: 'DISABLEGUESTMODE'
+          title: 'Disable guest mode'
+          activationMode: 'background'
+          authenticationRequired: no

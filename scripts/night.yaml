@@ -1,0 +1,25 @@
+sequence:
+  - service: homeassistant.turn_off
+    data:
+      entity_id:
+        - group.family_room_lights
+        - group.kitchen_lights
+        - group.basement_lights
+        - group.office_lights
+        - group.bar_lights
+        - group.exterior_lights
+  - delay: 00:01:00
+  - service: light.turn_off
+    data:
+      entity_id:
+        - light.loft
+        - light.foyer_lights
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.bedroom_motion_lights
+# This part seems redundant, but we include because if this script is called
+# directly by Alexa (which can't "call" automations or input_selects), we want
+# to make sure the input mode reflects that
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.mode
+      option: 'Night'

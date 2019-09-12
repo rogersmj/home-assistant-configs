@@ -1,0 +1,24 @@
+- alias: Turn on some lights when on vacation
+  trigger:
+    - platform: sun
+      event: sunset
+      offset: "-0:30:00"
+  condition:
+    - condition: state
+      entity_id: input_boolean.vacation
+      state: 'on'
+  action:
+    service: scene.turn_on
+    entity_id: scene.vacation_evening
+
+- alias: Turn off lights when on vacation
+  trigger:
+    - platform: time
+      at: "22:30:00"
+  condition:
+    - condition: state
+      entity_id: input_boolean.vacation
+      state: 'on'
+  action:
+    service: light.turn_off
+    entity_id: group.all_lights

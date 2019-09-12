@@ -1,0 +1,124 @@
+##########################################################
+# Script triggers for mode select
+
+# Call morning script whenever the mode changes to morning
+- alias: Morning mode select
+  trigger:
+    - platform: state
+      entity_id: input_select.mode
+      to: 'Morning'
+  action:
+    service: script.morning
+
+# Call day script whenever the mode changes to day
+- alias: Day mode select
+  trigger:
+    - platform: state
+      entity_id: input_select.mode
+      to: 'Day'
+  action:
+    service: script.day
+
+# Call evening script whenever the mode changes to evening
+- alias: Evening mode select
+  trigger:
+    - platform: state
+      entity_id: input_select.mode
+      to: 'Evening'
+  action:
+    service: script.evening
+
+# Sleepy time
+- alias: Night mode select
+  trigger:
+    - platform: state
+      entity_id: input_select.mode
+      to: 'Night'
+      for:
+        seconds: 10
+  action:
+    service: script.night
+
+
+# We can also trigger modes from a Hue remote
+- alias: Activate night mode from remote
+  trigger:
+    - platform: state
+      entity_id: sensor.hue_dimmer_1
+      to: '4_hold'
+  action:
+    - service: script.night
+
+- alias: Activate morning mode from remote
+  trigger:
+    - platform: state
+      entity_id: sensor.hue_dimmer_1
+      to: '1_hold'
+  action:
+    - service: script.morning
+
+
+##########################################################
+# Automation for mode select
+# Note: we want the mode to change automatically at times
+# of day and run the scripts whether someone is home or not.
+# Conditional logic in the scripts (mostly) should determine
+# what things happen depending on presence
+
+# Switch to morning mode based on time or motion
+- alias: Morning automation trigger
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.foyer_motion
+      from: 'off'
+      to: 'on'
+  condition:
+    # Only do this if we're previously in Night mode.
+    - condition: state
+      entity_id: input_select.mode
+      state: 'Night'
+    # And if it's between 6 and 8am; otherwise that motion sensor will trigger
+    # this in the middle of the night when the cats are up
+    - condition: time
+      after: '06:00:00'
+      before: '08:00:00'
+  action:
+    service: input_select.select_option
+    data:
+      entity_id: input_select.mode
+      option: 'Morning'
+
+# Switch to Day by 8:30am
+- alias: Switch off morning scene by 8:30am if we're home
+  trigger:
+    - platform: time
+      at: '08:30:00'
+  action:
+    service: input_select.select_option
+    data:
+      entity_id: input_select.mode
+      option: 'Day'
+
+# We do this at a certain time
+- alias: Switch to evening
+  trigger:
+    - platform: sun
+      event: sunset
+      offset: "-01:00:00"
+  action:
+    service: script.evening
+
+# If we're not home, change to Night automatically at 11:30pm
+- alias: Switch to night if not home
+  trigger:
+    - platform: time
+      at: '23:30:00'
+  condition:
+    - condition: state
+      entity_id: input_select.presence
+      state: 'Away'
+  action:
+    service: input_select.select_option
+    data:
+      entity_id: input_select.mode
+      state: 'Night'

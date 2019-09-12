@@ -1,0 +1,25 @@
+sequence:
+# This part seems redundant, but we include because if this script is called
+# directly by Alexa (which can't "call" automations or input_selects), we want
+# to make sure the input mode reflects that
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.mode
+      option: 'Evening'
+
+  - service: scene.turn_on
+    data_template:
+      entity_id: >-
+        {% if is_state("input_select.presence", "Home") %}
+          scene.evening
+        {% elif is_state("input_select.presence", "Away") %}
+          scene.evening_away
+        {% else %}
+        {% endif %}
+
+# Only turn on certain lights if we're home
+  - condition: state
+    entity_id: input_select.presence
+    state: 'Home'
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.bedroom_motion_lights

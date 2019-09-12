@@ -1,0 +1,31 @@
+- id: '1563151366904'
+  alias: Garage Hall Motion Lights - on
+  trigger:
+  - entity_id: binary_sensor.garage_entry_hall_motion
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: input_boolean.detect_motion
+    state: 'on'
+  action:
+  - data:
+      entity_id: light.garage_entry_hall_lights
+    service: light.turn_on
+- id: '1563151490780'
+  alias: Garage Hall Motion Lights - off
+  trigger:
+  - entity_id: binary_sensor.garage_entry_hall_motion
+    for: 00:03:00
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: input_boolean.detect_motion
+    state: 'on'
+  action:
+  - data:
+      entity_id: light.garage_entry_hall_lights
+    service: light.turn_off

@@ -1,0 +1,10 @@
+sequence:
+  - service: climate.ecobee_resume_program
+
+# This part seems redundant, but we include because if this script is called
+# directly by Alexa (which can't "call" automations or input_selects), we want
+# to make sure the input presence reflects that
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.presence
+      option: 'Home'

@@ -1,0 +1,53 @@
+###########################################################################
+# GROUPS
+# https://home-assistant.io/components/group/
+###########################################################################
+
+Playroom Lights:
+- light.playroom_main_lights
+
+Basement Lights:
+- light.basement_main_lights_1
+- light.basement_main_lights_2
+- light.basement_accent_lights_1
+- light.basement_accent_lights_2
+- switch.basement_crown_lights
+- light.bar_main_lights
+- light.bar_pendant_lights
+- switch.bar_undercabinet_lights
+- switch.basement_hall_light
+- light.playroom_main_lights
+
+Bar Lights:
+- light.bar_main_lights
+- light.bar_pendant_lights
+- switch.bar_undercabinet_lights
+
+Office Lights:
+- switch.office
+- switch.main_office_lights
+
+Kitchen Lights:
+- light.kitchen_main_lights
+- light.kitchen_table_lights
+- light.kitchen_pendant_lights
+- switch.kitchen_undercabinet_lights
+
+Family Room Lights:
+- light.family_room_main_lights
+- light.family_room_lamp_1
+- light.family_room_fireplace_lights
+- switch.bookshelf_lights
+- light.family_room_lamp_2
+
+Family Room Lamps:
+- light.family_room_lamp_2
+- light.family_room_lamp_1
+
+Bedroom lamps:
+- light.bedroom_lamp_amanda
+- light.bedroom_lamp_matt
+
+Exterior Lights:
+- switch.front_porch_lights
+- light.patio_lights

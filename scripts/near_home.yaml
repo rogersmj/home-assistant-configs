@@ -1,0 +1,4 @@
+# Runs when someone gets in the Home Area, if presence is Away
+
+sequence:
+  - service: climate.ecobee_resume_program

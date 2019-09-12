@@ -1,0 +1,285 @@
+###########################################################################
+# MOTION LIGHTS
+
+- alias: Turn on playroom lights when there is motion
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.playroom_motion
+      from: 'off'
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: input_select.presence
+      state: 'Home'
+    - condition: state
+      entity_id: input_boolean.detect_motion_basement
+      state: 'on'
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: input_select.mode
+          state: 'Morning'
+        - condition: state
+          entity_id: input_select.mode
+          state: 'Day'
+        - condition: state
+          entity_id: input_select.mode
+          state: 'Evening'
+  action:
+    - service: scene.turn_on
+      entity_id: scene.playroom_bright
+
+- alias: Turn off playroom lights when there is no motion for 15 minutes
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.playroom_motion
+      from: 'on'
+      to: 'off'
+      for:
+        minutes: 15
+  condition:
+    - condition: state
+      entity_id: input_boolean.detect_motion_basement
+      state: 'on'
+  action:
+    - service: homeassistant.turn_off
+      entity_id: group.playroom_lights
+
+
+- alias: Basement motion on
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.basement_hall_motion
+      from: 'off'
+      to: 'on'
+    - platform: state
+      entity_id: binary_sensor.basement_stairs_motion
+      from: 'off'
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: light.basement_accent_lights_1
+      state: 'off'
+    - condition: state
+      entity_id: input_boolean.detect_motion_basement
+      state: 'on'
+  action:
+    - service: homeassistant.turn_on
+      entity_id:
+        - light.basement_hall_lights
+        - switch.bar_undercabinet_lights
+
+- alias: Basement motion off
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.basement_hall_motion
+      from: 'on'
+      to: 'off'
+      for:
+        minutes: 5
+    - platform: state
+      entity_id: binary_sensor.basement_stairs_motion
+      from: 'on'
+      to: 'off'
+      for:
+        minutes: 5
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: binary_sensor.basement_hall_motion
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.basement_stairs_motion
+        state: 'off'
+      - condition: state
+        entity_id: light.basement_accent_lights_1
+        state: 'off'
+  action:
+    - service: homeassistant.turn_off
+      entity_id:
+        - light.basement_hall_lights
+        - switch.bar_undercabinet_lights
+
+
+- alias: Turn on foyer lights when there's motion in the evening or morning
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.foyer_motion
+      from: 'off'
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: input_boolean.detect_motion
+      state: 'on'
+    - condition: numeric_state
+      entity_id: light.foyer_lights
+      value_template: '{{ states.light.foyer_lights.attributes.brightness | default("0") }}'
+      below: 76
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: input_select.mode
+          state: 'Evening'
+        - condition: state
+          entity_id: input_select.mode
+          state: 'Morning'
+  action:
+    - service: light.turn_on
+      entity_id: light.foyer_lights
+      data:
+        brightness_pct: 30
+
+- alias: Turn off foyer lights when motion stops
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.foyer_motion
+      from: 'on'
+      to: 'off'
+      for:
+        minutes: 3
+  condition:
+    - condition: state
+      entity_id: input_boolean.detect_motion
+      state: 'on'
+    - condition: numeric_state
+      entity_id: light.foyer_lights
+      value_template: '{{ states.light.foyer_lights.attributes.brightness | default("0") }}'
+      below: 76
+  action:
+    - service: light.turn_off
+      entity_id: light.foyer_lights
+
+- alias: Turn on main floor lights when there's motion at night
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.foyer_motion
+      from: 'off'
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: input_boolean.detect_motion
+      state: 'on'
+    - condition: state
+      entity_id: input_select.mode
+      state: 'Night'
+  action:
+    - service: homeassistant.turn_on
+      entity_id:
+        - switch.bookshelf_lights
+        - switch.kitchen_undercabinet_lights
+
+- alias: Turn off main floor lights when motion stops at night
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.foyer_motion
+      from: 'on'
+      to: 'off'
+      for:
+        minutes: 5
+    - platform: state
+      entity_id: binary_sensor.living_room_occupancy
+      to: 'off'
+  condition:
+    - condition: state
+      entity_id: input_boolean.detect_motion
+      state: 'on'
+    - condition: state
+      entity_id: input_select.mode
+      state: 'Night'
+  action:
+    - service: homeassistant.turn_off
+      entity_id:
+        - switch.bookshelf_lights
+        - switch.kitchen_undercabinet_lights
+
+- alias: Turn on bedroom lamps with motion
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.master_bedroom_motion
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: input_boolean.bedroom_motion_lights
+      state: 'on'
+  action:
+    - service: scene.turn_on
+      entity_id: scene.bedroom_lamps_dim
+
+- alias: Shut off bedroom lamps when no motion
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.master_bedroom_motion
+      to: 'off'
+      for:
+        minutes: 5
+  condition:
+    - condition: state
+      entity_id: input_boolean.bedroom_motion_lights
+      state: 'on'
+  action:
+    - service: homeassistant.turn_off
+      entity_id: group.bedroom_lamps
+
+- alias: Disable bedroom motion lights when remote is used
+  trigger:
+    - platform: state
+      entity_id: sensor.hue_dimmer_1
+  condition:
+    condition: or
+    conditions:
+      - condition: state
+        entity_id: input_select.mode
+        state: 'Evening'
+      - condition: state
+        entity_id: input_select.mode
+        state: 'Night'
+  action:
+    - service: homeassistant.turn_off
+      entity_id: input_boolean.bedroom_motion_lights
+
+- alias: Shut off Fireplace lights when TV turns on
+  trigger:
+    - platform: state
+      entity_id: remote.family_room_tv
+      to: 'on'
+  action:
+    - service: homeassistant.turn_off
+      entity_id: light.family_room_fireplace_lights
+
+- alias: Turn on Fireplace lights when TV off if evening
+  trigger:
+    - platform: state
+      entity_id: remote.family_room_tv
+      to: 'off'
+  condition:
+    - condition: state
+      entity_id: input_select.mode
+      state: 'Evening'
+  action:
+    - service: homeassistant.turn_on
+      entity_id: light.family_room_fireplace_lights
+
+- alias: Turn on office lights with motion
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.office_motion
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: input_select.mode
+      state: 'Evening'
+  action:
+    - service: homeassistant.turn_on
+      entity_id: light.office
+
+- alias: Turn off office lights with no motion
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.office_motion
+      to: 'off'
+      for:
+        minutes: 20
+  action:
+    - service: homeassistant.turn_off
+      entity_id: group.office_lights

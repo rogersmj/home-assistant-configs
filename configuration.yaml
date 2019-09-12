@@ -1,0 +1,44 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+ios: !include ios.yaml
+discovery:
+lovelace:
+  mode: yaml
+
+logger:
+  default: error
+  # logs:
+  #   homeassistant.components.smartthings: debug
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+http:
+  base_url: https://rogersmj.duckdns.org:8123
+  ssl_certificate: /ssl/fullchain.pem
+  ssl_key: /ssl/privkey.pem
+  api_password: !secret api_password
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+# Zones
+zone: !include zones.yaml
+
+# Devices
+input_boolean: !include devices/input_booleans.yaml
+input_select: !include devices/input_selects.yaml
+sensor: !include devices/sensors.yaml
+remote: !include devices/remotes.yaml
+# binary_sensor: !include devices/binary_sensors.yaml
+# light: !include devices/lights.yaml
+# switch: !include devices/switches.yaml
+ecobee:
+  api_key: !secret ecobee_api_key
+
+group: !include groups.yaml
+scene: !include scenes.yaml
+
+automation: !include automations.yaml
+automation old: !include_dir_merge_list automations
+script: !include_dir_named scripts

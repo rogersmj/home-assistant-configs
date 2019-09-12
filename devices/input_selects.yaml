@@ -1,0 +1,32 @@
+mode:
+  name: Mode
+  options:
+    - Morning
+    - Day
+    - Evening
+    - Night
+  icon: mdi:home-circle
+
+presence:
+  name: Presence
+  options:
+    - Home
+    - Away
+  icon: mdi:home-account
+
+security_mode:
+  name: Security Mode
+  options:
+    - Disarmed
+    - Arming
+    - Armed
+  icon: mdi:shield-lock
+
+basement_scene:
+  name: Basement Scene
+  options:
+    - High
+    - Medium
+    - Low
+    - Movie
+    - 'Off'

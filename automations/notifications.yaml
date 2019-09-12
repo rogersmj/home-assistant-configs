@@ -1,0 +1,191 @@
+###########################################################################
+# Notifications
+
+- alias: Notify when basement leak detected
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.basement_leak_sensor
+      to: 'on'
+    # Check status every 3 minutes
+    - platform: time_pattern
+      minutes: '/3'
+      seconds: 00
+  condition:
+    condition: state
+    entity_id: binary_sensor.basement_leak_sensor
+    state: 'on'
+  action:
+    service: notify.notify
+    data:
+      message: "ALERT: Water leak detected in basement"
+
+- alias: Notify when garage opens while away
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.garage_double_bay
+      to: 'on'
+    - platform: state
+      entity_id: binary_sensor.garage_single_bay
+      to: 'on'
+  condition:
+    condition: state
+    entity_id: input_select.presence
+    state: 'Away'
+  action:
+    service: notify.notify
+    data:
+      message: "A garage door has been opened."
+
+- alias: Notify when away mode activated
+  trigger:
+    platform: state
+    entity_id: input_select.presence
+    to: 'Away'
+  action:
+    service: notify.notify
+    data:
+      message: "Away mode activated"
+
+- alias: Alert when garage doors left open
+  trigger:
+    - platform: sun
+      event: sunset
+      offset: "-01:00:00"
+    - platform: sun
+      event: sunset
+    - platform: state
+      entity_id: input_select.mode
+      to: 'Night'
+    - platform: state
+      entity_id: group.all_devices
+      from: 'home'
+      to: 'not_home'
+  condition:
+    condition: or
+    conditions:
+      - condition: state
+        entity_id: binary_sensor.garage_double_bay
+        state: 'on'
+      - condition: state
+        entity_id: binary_sensor.garage_single_bay
+        state: 'on'
+  action:
+    - service: notify.notify
+      data:
+        message: "One or more garage doors are open."
+
+- alias: Alert when Amanda leaves work
+  trigger:
+    - platform: state
+      entity_id: device_tracker.amandas_iphone
+      from: 'Bridgeview Animal Hospital'
+      to: 'not_home'
+      for:
+        minutes: 2
+    - platform: state
+      entity_id: device_tracker.amandas_iphone
+      from: 'Geist Clinic'
+      to: 'not_home'
+      for:
+        minutes: 2
+  action:
+    service: notify.ios_matts_iphone
+    data:
+      message: "Amanda is leaving work"
+
+- alias: Nathan's door alert
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.nathan_door
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: input_boolean.nathans_door_alert
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.alert_motion
+      state: 'on'
+  action:
+    - service: notify.notify
+      data:
+        message: "Nathan's bedroom door is open."
+    - service: tts.google_say
+      entity_id: media_player.living_room_speaker
+      data:
+        message: "Nathan's door is open."
+
+- alias: Activate Nathan's door alert on a schedule
+  trigger:
+    - platform: time
+      at: '19:15:00' # 7pm
+  action:
+    - service: homeassistant.turn_on
+      entity_id: input_boolean.nathans_door_alert
+
+- alias: Deactivate Nathan's door alert on a schedule
+  trigger:
+    - platform: time
+      at: '07:00:00'
+  action:
+    - service: homeassistant.turn_off
+      entity_id: input_boolean.nathans_door_alert
+
+- alias: Alert if Guest Mode is on for 24 hours
+  trigger:
+    platform: state
+    entity_id: input_boolean.guests
+    from: 'off'
+    to: 'on'
+    for:
+      hours: 24
+  condition:
+    - condition: state
+      entity_id: input_boolean.guests
+      state: 'on'
+  action:
+    - service: notify.notify
+      data:
+        message: "Guest mode has been on for 24 hours. Do you want to disable?"
+        data:
+          push:
+            category: "disableguestmode"
+
+- alias: Turn off guest mode from push alert
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: DISABLEGUESTMODE
+  action:
+    - service: homeassistant.turn_off
+      entity_id: input_boolean.guests
+
+
+# - alias: Alert when mailbox is opened
+#   trigger:
+#     platform: state
+#     entity_id: input_boolean.mail_arrived
+#     to: 'on'
+#   condition:
+#     condition: state
+#     entity_id: input_boolean.alert_motion
+#     state: 'on'
+#   action:
+#     service: notify.notify
+#     data:
+#       message: "Mail has arrived"
+
+# - alias: Read weather report in the Morning
+#   trigger:
+#     platform: state
+#     entity_id: binary_sensor.kitchen_motion
+#     to: 'on'
+#   condition:
+#     - condition: state
+#       entity_id: input_select.mode
+#       state: 'Morning'
+#   action:
+#     - service: homeassistant.turn_on
+#       entity_id: script.weather
+#     - service: homeassistant.turn_off
+#       entity_id: automation.read_weather_report_in_the_morning

@@ -1,0 +1,203 @@
+# If all devices leave and we don't have guests.
+- alias: Preparing away mode
+  trigger:
+    platform: state
+    entity_id: group.all_devices
+    from: 'home'
+    to: 'not_home'
+  condition:
+    - condition: state
+      entity_id: input_boolean.guests
+      state: 'off'
+  action:
+    - service: notify.notify
+      data:
+        message: "Preparing to activate away mode. You have 1 minute to cancel."
+        data:
+          push:
+            category: "prepareaway"
+    - service: script.away_prepare
+
+- alias: Cancel away and enable guests
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: CANCELGUESTS
+  action:
+    - service: homeassistant.turn_off
+      entity_id: script.away_prepare
+    - service: homeassistant.turn_on
+      entity_id: input_boolean.guests
+
+- alias: Cancel away
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: CANCEL
+  action:
+    - service: homeassistant.turn_off
+      entity_id: script.away_prepare
+
+- alias: Away presence mode
+  trigger:
+    - platform: state
+      entity_id: input_select.presence
+      to: 'Away'
+      for:
+        seconds: 59
+  action:
+    service: script.away
+
+- alias: Set Home when someone arrives
+  trigger:
+    - platform: state
+      entity_id: group.all_devices
+      to: 'home'
+  condition:
+    - condition: state
+      entity_id: input_boolean.guests
+      state: 'off'
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.presence
+        option: 'Home'
+    - service: homeassistant.turn_off
+      entity_id: script.away_prepare
+
+- alias: Come home script
+  trigger:
+    - platform: state
+      entity_id: input_select.presence
+      to: 'Home'
+  action:
+    - service: script.home
+    - service_template: >
+        {% if is_state("input_select.mode", "Morning") %}
+          script.morning
+        {% elif is_state("input_select.mode", "Day") %}
+          script.day
+        {% elif is_state("input_select.mode", "Evening") %}
+          script.evening
+        {% elif is_state("input_select.mode", "Night") %}
+          script.night
+        {% endif %}
+
+- alias: Near home script
+  trigger:
+    - platform: state
+      entity_id: device_tracker.amandas_iphone
+      from: 'not_home'
+      to: 'Home Area'
+    - platform: state
+      entity_id: device_tracker.matts_iphone
+      from: 'not_home'
+      to: 'Home Area'
+  condition:
+    - condition: state
+      entity_id: input_select.presence
+      state: 'Away'
+  action:
+    - service: script.near_home
+
+# #
+# # Run different scripts when we get home depending on what time it is
+# ## If we come home during the day (8am - 5pm)
+# - alias: Home presence Day
+#   trigger:
+#     - platform: state
+#       entity_id: input_select.presence
+#       to: 'Home'
+#   condition:
+#     - condition: time
+#       after: '08:00:00'
+#     - condition: time
+#       before: '17:00:00'
+#   action:
+#     - service: homeassistant.turn_on
+#       entity_id: script.home
+#     - service: homeassistant.turn_on
+#       entity_id: script.day
+#
+# ## If we come home and its evening and the house is NOT already in night mode
+# - alias: Home presence Evening
+#   trigger:
+#     - platform: state
+#       entity_id: input_select.presence
+#       to: 'Home'
+#   condition:
+#     - condition: time
+#       after: '17:00:00'
+#     - condition: time
+#       before: '23:59:00'
+#     - condition: template
+#       value_template: {{ states.input_select.mode.state != 'Night' }}
+#   action:
+#     - service: homeassistant.turn_on
+#       entity_id: script.home
+#     - service: homeassistant.turn_on
+#       entity_id: script.evening
+
+#  Note that `group.all_devices` is special: Its state
+#  is 'home' if ANY tracked device is home, and 'not_home'
+#  if EVERY tracked device is not home.
+
+# FUTURE ENHANCEMENT: make guests carry the fob?
+
+
+# Detect authorized guest entry when everyone is away via the garage door
+- alias: Detect guest Entry
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.garage_double_bay
+      to: 'on'
+    - platform: state
+      entity_id: binary_sensor.garage_single_bay
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: input_select.presence
+      state: 'Away'
+  action:
+    service: input_select.select_option
+    data:
+      entity_id: input_select.presence
+      option: 'Home'
+
+# And attempt to re-set Away mode after they go
+- alias: Set Away after guests
+  trigger:
+    - platform: time_pattern
+      hours: 2
+  condition:
+    - condition: state
+      entity_id: group.all_devices
+      state: not_home
+    - condition: state
+      entity_id: input_boolean.guests
+      state: 'off'
+    - condition: state
+      entity_id: input_select.presence
+      state: 'Home'
+    - condition: state
+      entity_id: binary_sensor.foyer_motion
+      state: 'off'
+      for:
+        hours: 1
+    - condition: state
+      entity_id: binary_sensor.garage_entry_motion
+      state: 'off'
+      for:
+        hours: 1
+    - condition: state
+      entity_id: binary_sensor.basement_hall_motion
+      state: 'off'
+      for:
+        hours: 1
+  action:
+    service: input_select.select_option
+    data:
+      entity_id: input_select.presence
+      option: 'Away'

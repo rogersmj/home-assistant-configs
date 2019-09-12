@@ -1,0 +1,355 @@
+###########################################################################
+# SCENES
+# https://home-assistant.io/components/scene/
+###########################################################################
+
+
+
+###########################################################################
+# Kitchen/Family Room
+###########################################################################
+- name: 'All bright'
+  entities:
+    light.family_room_main_lights:
+      state: on
+      brightness_pct: 100
+    light.family_room_lamp_1:
+      state: on
+      brightness_pct: 100
+    light.family_room_lamp_2:
+      state: on
+      brightness_pct: 100
+    light.family_room_fireplace_lights:
+      state: on
+      brightness_pct: 100
+    switch.bookshelf_lights: on
+    light.foyer_lights:
+      state: on
+      brightness_pct: 100
+    light.kitchen_main_lights:
+      state: on
+      brightness_pct: 100
+    light.kitchen_table_lights:
+      state: on
+      brightness_pct: 70
+    light.kitchen_pendant_lights:
+      state: on
+      brightness_pct: 50
+    switch.kitchen_undercabinet_lights: on
+
+- name: 'Evening Low'
+  entities:
+    light.family_room_main_lights:
+      state: on
+      brightness_pct: 30
+    light.family_room_lamp_1:
+      state: on
+      brightness_pct: 35
+    light.family_room_lamp_2:
+      state: on
+      brightness_pct: 35
+    light.family_room_fireplace_lights: off
+    switch.bookshelf_lights: on
+    light.foyer_lights: off
+    light.kitchen_main_lights: off
+    light.kitchen_table_lights: off
+    light.kitchen_pendant_lights:
+      state: on
+      brightness_pct: 40
+    switch.kitchen_undercabinet_lights: on
+
+- name: 'TV Mode'
+  entities:
+    light.family_room_main_lights:
+      state: on
+      brightness_pct: 30
+    light.family_room_lamp_1:
+      state: on
+      brightness_pct: 35
+    light.family_room_lamp_2:
+      state: off
+    light.family_room_fireplace_lights: off
+    switch.bookshelf_lights: on
+    light.foyer_lights: off
+    light.kitchen_main_lights: off
+    light.kitchen_table_lights: off
+    light.kitchen_pendant_lights:
+      state: on
+      brightness_pct: 30
+    switch.kitchen_undercabinet_lights: on
+
+- name: 'Evening'
+  entities:
+    light.family_room_main_lights:
+      state: on
+      brightness_pct: 100
+    light.family_room_lamp_1:
+      state: on
+      brightness_pct: 100
+    light.family_room_lamp_2:
+      state: on
+      brightness_pct: 100
+    light.family_room_fireplace_lights:
+      state: on
+      brightness_pct: 40
+    switch.bookshelf_lights: on
+    light.foyer_lights: off
+    light.kitchen_pendant_lights:
+      state: on
+      brightness_pct: 30
+    switch.kitchen_undercabinet_lights: on
+    light.loft_lamp:
+      state: on
+      brightness_pct: 100
+
+- name: 'First floor off'
+  entities:
+    group.family_room_lights: off
+    group.kitchen_lights: off
+    light.foyer_lights: off
+
+
+# Turn some lights on when it gets dark and we're not home
+- name: 'Evening Away'
+  entities:
+    light.loft_lamp: on
+    light.family_room_lamp_1: on
+
+- name: 'Kitchen low'
+  entities:
+    light.kitchen_main_lights: off
+    light.kitchen_table_lights: off
+    light.kitchen_pendant_lights:
+      state: on
+      brightness_pct: 30
+    switch.kitchen_undercabinet_lights: on
+
+- name: 'Kitchen bright'
+  entities:
+    light.kitchen_main_lights:
+      state: on
+      brightness_pct: 100
+    light.kitchen_table_lights:
+      state: on
+      brightness_pct: 30
+    light.kitchen_pendant_lights:
+      state: on
+      brightness_pct: 40
+    switch.kitchen_undercabinet_lights: on
+
+- name: 'Morning'
+  entities:
+    light.kitchen_main_lights:
+      state: on
+      brightness_pct: 100
+    light.kitchen_pendant_lights:
+      state: on
+      brightness_pct: 30
+    switch.kitchen_undercabinet_lights: on
+    light.family_room_lamp_1:
+      state: on
+      brightness_pct: 65
+    light.family_room_lamp_2:
+      state: on
+      brightness_pct: 100
+    switch.bookshelf_lights:
+      state: on
+
+- name: 'Dinner'
+  entities:
+    light.kitchen_main_lights:
+      state: on
+      brightness_pct: 30
+    light.kitchen_table_lights:
+      state: on
+      brightness_pct: 40
+    light.kitchen_pendant_lights:
+      state: on
+      brightness_pct: 30
+    switch.kitchen_undercabinet_lights: on
+    light.family_room_main_lights: off
+
+- name: 'Default Day'
+  entities:
+    light.family_room_main_lights: off
+    light.family_room_lamp_1: off
+    light.family_room_fireplace_lights: off
+    switch.bookshelf_lights: on
+    light.foyer_lights: off
+    light.kitchen_main_lights: off
+    light.kitchen_table_lights: off
+    light.kitchen_pendant_lights:
+      state: on
+      brightness_pct: 30
+    switch.kitchen_undercabinet_lights: on
+
+###########################################################################
+# Playroom
+###########################################################################
+
+- name: 'Playroom bright'
+  entities:
+    light.playroom_main_lights:
+      state: on
+      brightness_pct: 100
+
+###########################################################################
+# Basement
+###########################################################################
+
+- name: 'Basement off'
+  entities:
+    group.basement_lights: off
+    group.bar_lights: off
+    input_select.basement_scene: 
+      option: Off
+
+- name: 'Basement path motion'
+  entities:
+    switch.basement_hall_light:
+      state: on
+      brightness_pct: 100
+    switch.bar_undercabinet_lights:
+      state: on
+
+- name: 'Basement high'
+  entities:
+    group.basement_lights: on
+    group.bar_lights: on
+    light.bar_main_lights:
+      state: on
+      brightness_pct: 100
+    light.bar_pendant_lights:
+      state: on
+      brightness_pct: 60
+    light.basement_main_lights_1:
+      state: on
+      brightness_pct: 100
+    light.basement_accent_lights_1:
+      state: on
+      brightness_pct: 100
+    light.basement_main_lights_2:
+      state: on
+      brightness_pct: 100
+    light.basement_accent_lights_2:
+      state: on
+      brightness_pct: 100
+    switch.basement_hall_light:
+      state: on
+      brightness_pct: 100
+    input_select.basement_scene: 
+      option: High
+
+- name: 'Basement medium'
+  entities:
+    light.basement_main_lights_1:
+      state: on
+      brightness: 150
+    light.basement_main_lights_2: off
+    light.basement_accent_lights_1:
+      state: on
+      brightness: 50
+    light.basement_accent_lights_2:
+      state: on
+      brightness: 20
+    switch.basement_crown_lights: on
+    group.bar_lights: on
+    light.bar_main_lights:
+      state: on
+      brightness_pct: 60
+    light.bar_pendant_lights:
+      state: on
+      brightness_pct: 40
+    switch.basement_hall_light:
+      state: on
+      brightness_pct: 100
+    input_select.basement_scene: 
+      option: Medium
+
+- name: 'Basement low'
+  entities:
+    light.basement_main_lights_1: off
+    light.basement_main_lights_2: off
+    light.basement_accent_lights_1:
+      state: on
+      brightness_pct: 5
+    light.basement_accent_lights_2:
+      state: on
+      brightness_pct: 5
+    switch.basement_crown_lights: on
+    light.bar_main_lights: off
+    light.bar_pendant_lights: off
+    switch.bar_undercabinet_lights: on
+    switch.basement_hall_light:
+      state: on
+      brightness_pct: 20
+    input_select.basement_scene: 
+      option: Low
+
+- name: 'Basement movie'
+  entities:
+    light.basement_accent_lights_1:
+      state: on
+      brightness_pct: 5
+    switch.basement_hall_light:
+      state: on
+      brightness_pct: 5
+    light.basement_accent_lights_2: off
+    switch.basement_crown_lights: off
+    light.basement_main_lights_1: off
+    light.basement_main_lights_2: off
+    group.bar_lights: off
+    input_select.basement_scene: 
+      option: Movie
+
+#- name: 'Basement path lighting'
+
+###########################################################################
+# Bedroom scenes
+###########################################################################
+- name: 'Bedroom lamps full'
+  entities:
+    light.bedroom_lamp_matt:
+      state: on
+      brightness_pct: 100
+    light.bedroom_lamp_amanda:
+      state: on
+      brightness_pct: 100
+
+- name: 'Bedroom lamps dim'
+  entities:
+    light.bedroom_lamp_matt:
+      state: on
+      brightness_pct: 30
+    light.bedroom_lamp_amanda:
+      state: on
+      brightness_pct: 30
+
+###########################################################################
+# Vacation scenes
+###########################################################################
+
+- name: 'Vacation evening'
+  entities:
+    light.foyer_lights:
+      state: on
+      brightness: 130
+    light.family_room_lamp_1:
+      state: on
+      brightness: 100
+    light.kitchen_pendant_lights:
+      state: on
+      brightness: 30
+    switch.front_porch_lights:
+      state: on
+
+
+###########################################################################
+# Misc scenes
+###########################################################################
+- name: 'First floor motion night'
+  entities:
+    switch.bookshelf_lights:
+      state: on
+    switch.kitchen_undercabinet_lights:
+      state: on

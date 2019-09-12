@@ -1,0 +1,29 @@
+sequence:
+# Only run the "away" actions if Guests is off
+  - condition: state
+    entity_id: input_boolean.guests
+    state: 'off'
+  - service: homeassistant.turn_off
+    data:
+      entity_id:
+        - group.all_lights
+        - group.all_switches
+  - service: climate.set_preset_mode
+    data:
+      entity_id: climate.my_ecobee3
+      preset_mode: 'away'
+
+# This part seems redundant, but we include because if this script is called
+# directly by Alexa (which can't "call" automations or input_selects), we want
+# to make sure the presence status reflects that
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.presence
+      option: 'Away'
+
+# In case we left when it's already Evening, turn on the evening away scene
+  - condition: state
+    entity_id: input_select.mode
+    state: 'Evening'
+  - service: scene.turn_on
+    entity_id: scene.evening_away
