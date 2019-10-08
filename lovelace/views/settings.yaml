@@ -1,0 +1,16 @@
+title: Settings
+badges: []
+cards:
+  - entities:
+      - entity: input_select.mode
+      - entity: input_boolean.guests
+      - entity: input_boolean.vacation_mode
+      - entity: input_boolean.detect_motion
+      - entity: input_boolean.detect_motion_basement
+      - entity: input_boolean.bedroom_motion_lights
+    show_header_toggle: false
+    title: Settings
+    type: entities
+  - entities:
+      - entity: input_select.presence
+    type: glance

@@ -6,6 +6,10 @@ discovery:
 lovelace:
   mode: yaml
 
+# A plugin management system
+hacs:
+  token: 096f7b7b2179d6d8c7afdf779d02acb5dc7fef74
+
 logger:
   default: error
   # logs:
@@ -21,6 +25,12 @@ http:
 # Text to speech
 tts:
   - platform: google_translate
+
+alexa_media:
+  accounts:
+    - email: !secret amazon_user
+      password: !secret amazon_password
+      url: amazon.com
 
 # Zones
 zone: !include zones.yaml

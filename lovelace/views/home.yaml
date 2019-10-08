@@ -1,0 +1,80 @@
+path: default_view
+title: Home
+panel: true
+cards:
+  - type: horizontal-stack
+    cards:
+    - type: vertical-stack
+      cards:
+        - type: weather-forecast
+          entity: weather.home
+    - type: vertical-stack
+      cards:
+      - type: horizontal-stack
+        cards:
+          - entity: scene.default_day
+            icon: 'mdi:lightbulb'
+            type: entity-button
+          - entity: scene.evening_low
+            icon: 'mdi:floor-lamp'
+            type: entity-button
+          - entity: scene.evening
+            icon: 'mdi:lightbulb-on'
+            type: entity-button
+          - entity: scene.dinner
+            icon: 'mdi:ceiling-light'
+            type: entity-button
+      - type: horizontal-stack
+        cards:
+          - type: 'custom:button-card'
+            entity: input_select.mode
+            name: Morning
+            icon: mdi:weather-sunset-up
+            tap_action: call-service
+            service: input_select.select_option
+            service_data:
+              option: Morning
+            show_state: false
+            state:
+              - operator: '!='
+                value: "Morning"
+                color: var(--disabled-text-color)
+          - type: 'custom:button-card'
+            entity: input_select.mode
+            name: Day
+            icon: mdi:weather-sunny
+            tap_action: call-service
+            service: input_select.select_option
+            service_data:
+              option: Day
+            show_state: false
+            state:
+              - operator: '!='
+                value: "Day"
+                color: var(--disabled-text-color)
+          - type: 'custom:button-card'
+            entity: input_select.mode
+            name: Evening
+            icon: mdi:weather-sunset
+            tap_action: call-service
+            service: input_select.select_option
+            service_data:
+              option: Evening
+            show_state: false
+            state:
+              - operator: '!='
+                value: "Evening"
+                color: var(--disabled-text-color)
+          - type: 'custom:button-card'
+            entity: input_select.mode
+            name: Night
+            icon: mdi:weather-night
+            tap_action: call-service
+            service: input_select.select_option
+            service_data:
+              option: Night
+            show_state: false
+            state:
+              - operator: '!='
+                value: "Night"
+                color: var(--disabled-text-color)

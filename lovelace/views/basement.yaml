@@ -1,0 +1,22 @@
+title: Basement
+badges: []
+cards:
+  - entities:
+      - entity: light.basement_main_lights_1
+      - entity: light.basement_main_lights_2
+      - entity: light.basement_accent_lights_1
+      - entity: light.basement_accent_lights_2
+      - entity: switch.basement_crown_lights
+      - entity: light.bar_main_lights
+      - entity: light.bar_pendant_lights
+      - entity: switch.bar_undercabinet_lights
+    title: Lights
+    type: entities
+  - entities:
+      - entity: scene.basement_high
+      - entity: scene.basement_medium
+      - entity: scene.basement_low
+      - entity: scene.basement_movie
+      - entity: scene.basement_off
+    title: Scenes
+    type: entities

@@ -148,56 +148,56 @@
 
 
 # Detect authorized guest entry when everyone is away via the garage door
-- alias: Detect guest Entry
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.garage_double_bay
-      to: 'on'
-    - platform: state
-      entity_id: binary_sensor.garage_single_bay
-      to: 'on'
-  condition:
-    - condition: state
-      entity_id: input_select.presence
-      state: 'Away'
-  action:
-    service: input_select.select_option
-    data:
-      entity_id: input_select.presence
-      option: 'Home'
+# - alias: Detect guest Entry
+#   trigger:
+#     - platform: state
+#       entity_id: binary_sensor.garage_double
+#       to: 'on'
+#     - platform: state
+#       entity_id: binary_sensor.garage_single
+#       to: 'on'
+#   condition:
+#     - condition: state
+#       entity_id: input_select.presence
+#       state: 'Away'
+#   action:
+#     service: input_select.select_option
+#     data:
+#       entity_id: input_select.presence
+#       option: 'Home'
 
 # And attempt to re-set Away mode after they go
-- alias: Set Away after guests
-  trigger:
-    - platform: time_pattern
-      hours: 2
-  condition:
-    - condition: state
-      entity_id: group.all_devices
-      state: not_home
-    - condition: state
-      entity_id: input_boolean.guests
-      state: 'off'
-    - condition: state
-      entity_id: input_select.presence
-      state: 'Home'
-    - condition: state
-      entity_id: binary_sensor.foyer_motion
-      state: 'off'
-      for:
-        hours: 1
-    - condition: state
-      entity_id: binary_sensor.garage_entry_motion
-      state: 'off'
-      for:
-        hours: 1
-    - condition: state
-      entity_id: binary_sensor.basement_hall_motion
-      state: 'off'
-      for:
-        hours: 1
-  action:
-    service: input_select.select_option
-    data:
-      entity_id: input_select.presence
-      option: 'Away'
+# - alias: Set Away after guests
+#   trigger:
+#     - platform: time_pattern
+#       hours: 2
+#   condition:
+#     - condition: state
+#       entity_id: group.all_devices
+#       state: not_home
+#     - condition: state
+#       entity_id: input_boolean.guests
+#       state: 'off'
+#     - condition: state
+#       entity_id: input_select.presence
+#       state: 'Home'
+#     - condition: state
+#       entity_id: binary_sensor.foyer_motion
+#       state: 'off'
+#       for:
+#         hours: 1
+#     - condition: state
+#       entity_id: binary_sensor.garage_entry_hall_motion
+#       state: 'off'
+#       for:
+#         hours: 1
+#     - condition: state
+#       entity_id: binary_sensor.basement_hall_motion
+#       state: 'off'
+#       for:
+#         hours: 1
+#   action:
+#     service: input_select.select_option
+#     data:
+#       entity_id: input_select.presence
+#       option: 'Away'
